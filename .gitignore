@@ -1,0 +1,7 @@
+node_modules/
+dist/
+installer/
+*.log
+.DS_Store
+Ekran görüntüsü*.png
+Thumbs.db

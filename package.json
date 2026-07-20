@@ -1,0 +1,91 @@
+{
+  "name": "cobalt",
+  "version": "0.1.0",
+  "description": "Modern PC maintenance, driver management and optimization for Windows",
+  "main": "main.js",
+  "author": {
+    "name": "Enes",
+    "email": "isikenes@proton.me"
+  },
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win --x64",
+    "build:portable": "electron-builder --win portable --x64",
+    "build:pkg": "electron-packager . Cobalt --overwrite --platform=win32 --arch=x64 --icon=build/icon.ico --out=dist --asar --app-copyright=\"Copyright 2026 Enes\"",
+    "build:nsis": "electron-builder --win nsis --x64",
+    "pack": "electron-builder --dir"
+  },
+  "devDependencies": {
+    "@electron/packager": "^20.0.3",
+    "electron": "^31.0.0",
+    "electron-builder": "^24.13.3",
+    "rcedit": "^5.0.2"
+  },
+  "dependencies": {
+    "discord-rpc": "^4.0.1",
+    "node-notifier": "^10.0.1"
+  },
+  "build": {
+    "appId": "com.enes.cobalt",
+    "productName": "Cobalt",
+    "copyright": "Copyright (c) 2026 Enes",
+    "asar": true,
+    "files": [
+      "main.js",
+      "preload.js",
+      "main/**/*",
+      "renderer/**/*",
+      "cobalt.png",
+      "cobaltbg.png",
+      "!**/*.md",
+      "!**/*.log"
+    ],
+    "extraResources": [
+      {
+        "from": "cobalt.png",
+        "to": "cobalt.png"
+      },
+      {
+        "from": "cobaltbg.png",
+        "to": "cobaltbg.png"
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.ico",
+      "requestedExecutionLevel": "requireAdministrator",
+      "artifactName": "${productName}-${version}-${arch}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Cobalt",
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico"
+    },
+    "portable": {
+      "artifactName": "${productName}-${version}-portable.${ext}"
+    },
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    }
+  }
+}

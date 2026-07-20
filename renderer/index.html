@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com 'unsafe-inline'; style-src 'self' https://cdnjs.cloudflare.com 'unsafe-inline'; font-src https://cdnjs.cloudflare.com; img-src 'self' data:;" />
+  <title>Cobalt</title>
+  <link rel="icon" href="cobaltbg.png" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div class="titlebar">
+    <div class="tb-left">
+      <img src="cobaltbg.png" class="tb-icon" alt="Cobalt" />
+    </div>
+    <div class="tb-center">
+      <span>Cobalt</span>
+    </div>
+    <div class="tb-buttons">
+      <button class="tb-btn" id="tbMin" title="Minimize"><i class="fa-solid fa-minus"></i></button>
+      <button class="tb-btn" id="tbMax" title="Maximize"><i class="fa-regular fa-square"></i></button>
+      <button class="tb-btn close" id="tbClose" title="Close"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+  </div>
+
+  <div id="splash" class="splash">
+    <div class="splash-inner">
+      <img src="cobaltbg.png" class="splash-logo" alt="Cobalt" />
+      <div class="splash-name">Cobalt</div>
+      <div class="splash-sub" id="splashSub">Starting up...</div>
+    </div>
+    <div class="splash-bar-wrap">
+      <div class="splash-bar-indeterminate"></div>
+    </div>
+  </div>
+
+  <div id="app">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <img src="cobaltbg.png" class="brand-logo" alt="Cobalt" />
+        <div class="name">Cobalt</div>
+      </div>
+
+      <div class="nav-item" data-route="system">
+        <i class="fa-solid fa-desktop"></i>
+        <span class="label">System</span>
+      </div>
+      <div class="nav-item" data-route="scan">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <span class="label">Scan</span>
+      </div>
+      <div class="nav-item" data-route="drivers">
+        <i class="fa-solid fa-download"></i>
+        <span class="label">Drivers</span>
+      </div>
+      <div class="nav-item" data-route="apps">
+        <i class="fa-solid fa-table-cells-large"></i>
+        <span class="label">Apps</span>
+      </div>
+      <div class="nav-item" data-route="optimize">
+        <i class="fa-solid fa-wand-magic-sparkles"></i>
+        <span class="label">Optimize</span>
+      </div>
+      <div class="nav-item" data-route="uninstaller">
+        <i class="fa-solid fa-trash-can"></i>
+        <span class="label">Uninstaller</span>
+      </div>
+      <div class="nav-item" data-route="cleanup">
+        <i class="fa-solid fa-broom"></i>
+        <span class="label">Cleanup</span>
+      </div>
+      <div class="nav-item" data-route="memory">
+        <i class="fa-solid fa-memory"></i>
+        <span class="label">Memory</span>
+      </div>
+      <div class="nav-item" data-route="defender">
+        <i class="fa-solid fa-shield-halved"></i>
+        <span class="label">Defender</span>
+      </div>
+      <div class="nav-item" data-route="dns">
+        <i class="fa-solid fa-globe"></i>
+        <span class="label">DNS</span>
+      </div>
+      <div class="nav-item" data-route="power">
+        <i class="fa-solid fa-plug"></i>
+        <span class="label">Power</span>
+      </div>
+      <div class="nav-item" data-route="customization">
+        <i class="fa-solid fa-window-restore"></i>
+        <span class="label">Windows</span>
+      </div>
+
+      <div class="nav-spacer"></div>
+
+      <div class="nav-item" data-route="settings">
+        <i class="fa-solid fa-gear"></i>
+        <span class="label">Settings</span>
+      </div>
+    </aside>
+
+    <main class="main" id="main"></main>
+  </div>
+
+  <div id="forceUpdateOverlay" class="fu-overlay" style="display:none;">
+    <div class="fu-card">
+      <img src="cobaltbg.png" class="fu-logo" alt="Cobalt" />
+      <div class="fu-title" id="fuTitle">Update required</div>
+      <div class="fu-sub" id="fuSub">A new version of Cobalt is available. Cobalt must be updated before you can continue.</div>
+      <div class="fu-versions">
+        <span id="fuCurrent">v0.0.0</span>
+        <i class="fa-solid fa-arrow-right"></i>
+        <span id="fuLatest" class="fu-new">v0.0.0</span>
+      </div>
+      <div class="fu-progress" id="fuProgress" style="display:none;">
+        <div class="fu-progress-bar"><div class="fu-progress-fill" id="fuProgressFill"></div></div>
+        <div class="fu-progress-text" id="fuProgressText">0%</div>
+      </div>
+      <button class="fu-btn" id="fuBtn">Update now</button>
+      <div class="fu-note" id="fuNote">Cobalt will restart automatically after the installer completes.</div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('tbMin').addEventListener('click', () => window.win.minimize());
+    document.getElementById('tbMax').addEventListener('click', () => window.win.toggleMaximize());
+    document.getElementById('tbClose').addEventListener('click', () => window.win.close());
+    window.win.onState((state) => {
+      const icon = document.querySelector('#tbMax i');
+      if (!icon) return;
+      icon.className = state === 'maximized' ? 'fa-regular fa-clone' : 'fa-regular fa-square';
+    });
+
+    (function runSplash() {
+      const sub = document.getElementById('splashSub');
+      const splash = document.getElementById('splash');
+      const steps = [
+        'Loading modules...',
+        'Preparing interface...',
+        'Applying theme...',
+        'Almost ready...',
+      ];
+      let i = 0;
+      const tick = setInterval(() => {
+        sub.textContent = steps[i % steps.length];
+        i++;
+      }, 500);
+      setTimeout(() => {
+        clearInterval(tick);
+        splash.classList.add('hide');
+        setTimeout(() => splash.remove(), 500);
+      }, 1800);
+    })();
+  </script>
+  <script>
+    (function forceUpdateInit() {
+      if (!window.cobalt || !window.cobalt.onForceUpdate) return;
+      const overlay = document.getElementById('forceUpdateOverlay');
+      const btn = document.getElementById('fuBtn');
+      const cur = document.getElementById('fuCurrent');
+      const latest = document.getElementById('fuLatest');
+      const prog = document.getElementById('fuProgress');
+      const fill = document.getElementById('fuProgressFill');
+      const text = document.getElementById('fuProgressText');
+      const note = document.getElementById('fuNote');
+      let info = null;
+      window.cobalt.onForceUpdate((payload) => {
+        info = payload;
+        cur.textContent = 'v' + (payload.current || '');
+        latest.textContent = payload.latest.startsWith('v') ? payload.latest : ('v' + payload.latest);
+        overlay.style.display = 'flex';
+      });
+      btn.addEventListener('click', async () => {
+        if (!info || !info.downloadUrl) return;
+        btn.disabled = true;
+        btn.textContent = 'Downloading...';
+        prog.style.display = 'block';
+        try {
+          const r = await window.cobalt.updaterInstall(info, (p) => {
+            const pct = p && p.pct != null ? p.pct : 0;
+            fill.style.width = pct + '%';
+            text.textContent = pct + '%';
+          });
+          if (r && r.ok) {
+            btn.textContent = 'Launching installer...';
+            note.textContent = 'The installer is starting. Cobalt will close in a moment.';
+          } else {
+            btn.disabled = false;
+            btn.textContent = 'Retry';
+            note.textContent = 'Update failed: ' + (r && r.error ? r.error : 'unknown error');
+          }
+        } catch (e) {
+          btn.disabled = false;
+          btn.textContent = 'Retry';
+          note.textContent = 'Update failed: ' + (e && e.message ? e.message : 'unknown error');
+        }
+      });
+    })();
+  </script>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
