@@ -440,6 +440,12 @@ foreach ($id in $aumids) {
 
 ipcMain.on('rpc:tab', (_e, route) => rpc.setTab(route));
 ipcMain.on('rpc:usage', (_e, payload) => rpc.setUsage(payload || {}));
+ipcMain.handle('rpc:getConfig', async () => ({ ok: true, data: rpc.getConfig(), status: rpc.status() }));
+ipcMain.handle('rpc:setConfig', async (_e, next) => {
+  try { return { ok: true, data: rpc.setConfig(next || {}), status: rpc.status() }; }
+  catch (e) { return { ok: false, error: e.message }; }
+});
+ipcMain.handle('rpc:status', async () => ({ ok: true, data: rpc.status() }));
 
 ipcMain.handle('updater:check', async () => {
   try { return { ok: true, data: await updater.check() }; }

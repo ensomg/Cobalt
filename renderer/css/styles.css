@@ -1520,3 +1520,39 @@ html, body {
   0%   { left: -40%; }
   100% { left: 100%; }
 }
+
+.rpc-list { display: flex; flex-direction: column; gap: 4px; }
+.rpc-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 12px; border-radius: var(--r-sm);
+  border: 1px solid var(--border-dim); background: var(--bg-1);
+  cursor: pointer; transition: border-color 0.15s, background 0.15s;
+}
+.rpc-row:hover { border-color: var(--border); background: var(--bg-2); }
+.rpc-row input[type="checkbox"] {
+  appearance: none; -webkit-appearance: none;
+  width: 34px; height: 20px; border-radius: 10px;
+  background: var(--bg-3); border: 1px solid var(--border);
+  position: relative; cursor: pointer; flex-shrink: 0;
+  transition: background 0.15s, border-color 0.15s;
+}
+.rpc-row input[type="checkbox"]::after {
+  content: ''; position: absolute; top: 2px; left: 2px;
+  width: 14px; height: 14px; border-radius: 50%;
+  background: var(--text-dim); transition: left 0.15s, background 0.15s;
+}
+.rpc-row input[type="checkbox"]:checked {
+  background: var(--accent); border-color: var(--accent);
+}
+.rpc-row input[type="checkbox"]:checked::after {
+  left: 16px; background: #fff;
+}
+.rpc-input {
+  width: 100%; padding: 8px 10px;
+  background: var(--bg-1); color: var(--text);
+  border: 1px solid var(--border-dim); border-radius: var(--r-sm);
+  font-family: inherit; font-size: 12px; outline: none;
+  transition: border-color 0.15s;
+}
+.rpc-input:focus { border-color: var(--accent); }
+.rpc-input::placeholder { color: var(--text-mute); }

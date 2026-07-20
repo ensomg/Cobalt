@@ -283,24 +283,101 @@ function animHtml() {
   `;
 }
 
+let rpcCfg = null;
+let rpcStat = null;
+
+async function loadRpc() {
+  try {
+    const r = await window.cobalt.rpcGetConfig();
+    if (r && r.ok) { rpcCfg = r.data; rpcStat = r.status; }
+  } catch {}
+  if (!rpcCfg) rpcCfg = { enabled: true, showTab: true, showStats: true, showTime: true, customDetails: '', customState: '' };
+  if (!rpcStat) rpcStat = { enabled: rpcCfg.enabled, connected: false };
+}
+
+function discordHtml() {
+  const c = rpcCfg || {};
+  const s = rpcStat || {};
+  const dotColor = s.connected ? 'var(--ok)' : (c.enabled ? 'var(--warn)' : 'var(--text-mute)');
+  const dotLabel = s.connected ? 'Connected to Discord' : (c.enabled ? 'Waiting for Discord' : 'Disabled');
+  const row = (id, label, desc, checked) => `
+    <label class="rpc-row" for="rpc-${id}">
+      <div style="flex:1; min-width:0">
+        <div style="font-size:12px; font-weight:600">${escapeHtml(label)}</div>
+        <div style="font-size:11px; color:var(--text-dim); margin-top:2px">${escapeHtml(desc)}</div>
+      </div>
+      <input type="checkbox" id="rpc-${id}" data-rpc-key="${id}" ${checked ? 'checked' : ''} />
+    </label>`;
+  return `
+    <div class="card">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px">
+        <i class="fa-brands fa-discord" style="font-size:20px; color:#5865f2"></i>
+        <div style="flex:1">
+          <h3 style="margin:0; font-size:14px; font-weight:600">Discord Rich Presence</h3>
+          <div style="font-size:11px; color:var(--text-dim); margin-top:2px">Show what you're doing in Cobalt on your Discord profile.</div>
+        </div>
+        <div style="display:flex; align-items:center; gap:6px; font-size:11px; color:var(--text-dim)">
+          <span style="width:8px; height:8px; border-radius:50%; background:${dotColor}; box-shadow:0 0 6px ${dotColor}"></span>
+          ${escapeHtml(dotLabel)}
+        </div>
+      </div>
+
+      <div class="rpc-list">
+        ${row('enabled', 'Enable Discord Rich Presence', 'Master switch. Turn off to hide Cobalt from your Discord profile.', c.enabled)}
+        ${row('showTab', 'Show current section', 'Displays the active tab (e.g. "Driver Management") as the first line.', c.showTab)}
+        ${row('showStats', 'Show CPU / GPU usage', 'Live CPU and GPU percentages appear on the second line.', c.showStats)}
+        ${row('showTime', 'Show elapsed time', 'Includes the "elapsed" counter next to the presence card.', c.showTime)}
+      </div>
+
+      <div style="margin-top:16px; padding-top:14px; border-top:1px solid var(--border-dim)">
+        <div style="font-size:12px; font-weight:600; margin-bottom:4px">Custom text (optional)</div>
+        <div style="font-size:11px; color:var(--text-dim); margin-bottom:10px">
+          Overrides the default lines when filled. Placeholders:
+          <code>{tab}</code>, <code>{cpu}</code>, <code>{gpu}</code>, <code>{stats}</code>, <code>{version}</code>.
+        </div>
+        <label style="display:block; margin-bottom:10px">
+          <div style="font-size:11px; color:var(--text-dim); margin-bottom:4px">Line 1 (details)</div>
+          <input type="text" id="rpcCustomDetails" maxlength="128" class="rpc-input" placeholder="Leave empty for default" value="${escapeHtml(c.customDetails || '')}" />
+        </label>
+        <label style="display:block">
+          <div style="font-size:11px; color:var(--text-dim); margin-bottom:4px">Line 2 (state)</div>
+          <input type="text" id="rpcCustomState" maxlength="128" class="rpc-input" placeholder="Leave empty for default" value="${escapeHtml(c.customState || '')}" />
+        </label>
+        <div style="margin-top:12px; display:flex; gap:8px">
+          <button class="btn primary small" id="rpcSaveBtn"><i class="fa-solid fa-check"></i> Save text</button>
+          <button class="btn ghost small" id="rpcResetBtn"><i class="fa-solid fa-rotate-left"></i> Reset defaults</button>
+        </div>
+      </div>
+
+      <div style="margin-top:16px; padding:12px; border:1px solid var(--border-dim); border-radius:var(--r-sm); background:var(--bg-1); font-size:11px; color:var(--text-dim); line-height:1.7">
+        <b style="color:var(--text)">Not working?</b> Make sure the Discord desktop app is running (not the browser version), and that
+        <i>Activity Privacy → Display current activity as a status message</i> is enabled in Discord settings.
+      </div>
+    </div>
+  `;
+}
+
 function tabBody() {
   if (activeTab === 'theme') return themeHtml();
   if (activeTab === 'anim') return animHtml();
+  if (activeTab === 'discord') return discordHtml();
   return aboutHtml();
 }
 
 export async function renderSettings() {
+  await loadRpc();
   const body = tabBody();
   return `
     <div class="page-header">
       <div>
         <h1 class="page-title">Settings</h1>
-        <div class="page-sub">Theme and app information</div>
+        <div class="page-sub">Theme, animations, Discord integration and app information</div>
       </div>
     </div>
     <div class="settings-tabs">
       <div class="tab ${activeTab === 'theme' ? 'active' : ''}" data-tab="theme"><i class="fa-solid fa-palette"></i> Theme</div>
       <div class="tab ${activeTab === 'anim' ? 'active' : ''}" data-tab="anim"><i class="fa-solid fa-wand-sparkles"></i> Animations</div>
+      <div class="tab ${activeTab === 'discord' ? 'active' : ''}" data-tab="discord"><i class="fa-brands fa-discord"></i> Discord</div>
       <div class="tab ${activeTab === 'about' ? 'active' : ''}" data-tab="about"><i class="fa-solid fa-circle-info"></i> About</div>
     </div>
     <div id="settingsBody">${body}</div>
@@ -324,17 +401,21 @@ function bindPalettes(root) {
 
 export function bindSettings(root) {
   const tabs = root.querySelectorAll('.tab');
-  tabs.forEach((t) => t.addEventListener('click', () => {
+  tabs.forEach((t) => t.addEventListener('click', async () => {
     activeTab = t.dataset.tab;
     const body = root.querySelector('#settingsBody');
     tabs.forEach((x) => x.classList.toggle('active', x.dataset.tab === activeTab));
+    if (activeTab === 'discord') await loadRpc();
     body.innerHTML = tabBody();
     if (activeTab === 'theme') bindPalettes(root);
+    if (activeTab === 'anim') bindAnims(root);
+    if (activeTab === 'discord') bindDiscord(root);
     const q = root.querySelector('#quitCobaltBtn');
     if (q) q.addEventListener('click', () => { if (window.win && window.win.quit) window.win.quit(); });
   }));
   bindPalettes(root);
   bindAnims(root);
+  bindDiscord(root);
   const q = root.querySelector('#quitCobaltBtn');
   if (q) q.addEventListener('click', () => { if (window.win && window.win.quit) window.win.quit(); });
   const t = root.querySelector('#testNotifBtn');
@@ -346,6 +427,43 @@ export function bindSettings(root) {
       kind: res.supported ? 'ok' : 'warn',
       notify: false,
     }));
+  });
+}
+
+async function pushRpc(patch, refreshHeader = false) {
+  try {
+    const r = await window.cobalt.rpcSetConfig(patch);
+    if (r && r.ok) { rpcCfg = r.data; rpcStat = r.status; }
+  } catch {}
+  if (refreshHeader) {
+    const body = document.getElementById('settingsBody');
+    if (body && activeTab === 'discord') { body.innerHTML = discordHtml(); bindDiscord(document); }
+  }
+}
+
+function bindDiscord(root) {
+  root.querySelectorAll('input[data-rpc-key]').forEach((el) => {
+    el.addEventListener('change', async () => {
+      const key = el.dataset.rpcKey;
+      const patch = { [key]: !!el.checked };
+      const refresh = key === 'enabled';
+      await pushRpc(patch, refresh);
+      if (!refresh) {
+        import('../ui/toast.js').then(({ toast }) => toast({ title: 'Discord settings saved', kind: 'ok', notify: false }));
+      }
+    });
+  });
+  const saveBtn = root.querySelector('#rpcSaveBtn');
+  if (saveBtn) saveBtn.addEventListener('click', async () => {
+    const d = root.querySelector('#rpcCustomDetails');
+    const s = root.querySelector('#rpcCustomState');
+    await pushRpc({ customDetails: d ? d.value : '', customState: s ? s.value : '' }, false);
+    import('../ui/toast.js').then(({ toast }) => toast({ title: 'Custom text saved', kind: 'ok', notify: false }));
+  });
+  const resetBtn = root.querySelector('#rpcResetBtn');
+  if (resetBtn) resetBtn.addEventListener('click', async () => {
+    await pushRpc({ enabled: true, showTab: true, showStats: true, showTime: true, customDetails: '', customState: '' }, true);
+    import('../ui/toast.js').then(({ toast }) => toast({ title: 'Discord settings reset', kind: 'ok', notify: false }));
   });
 }
 

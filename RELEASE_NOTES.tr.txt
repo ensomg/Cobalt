@@ -1,0 +1,85 @@
+Cobalt v0.1.0
+=============
+İlk kararlı sürüm. Windows için modern PC bakım, sürücü ve
+optimizasyon aracı — tek bir arayüz altında.
+
+--------------------------------------------------------------
+Yenilikler
+--------------------------------------------------------------
+
+Sürücüler
+- Windows Update kataloğundan bekleyen sürücü güncellemelerinin
+  listelenmesi ve arka planda sessizce kurulması.
+- Kurulum sırasında gerçek zamanlı ilerleme takibi.
+
+Optimizasyon
+- Kayıt defteri ve servis ayarları için hazır önayarlar.
+- Her ayar için mevcut durum tespiti ve tek tıkla geri alma.
+- Başlangıç öğeleri ve Windows servisleri yönetimi.
+- SFC / DISM tabanlı sistem onarım araçları.
+
+Uygulamalar
+- winget üzerinden kurulum, güncelleme ve kaldırma.
+- Kurulu programların ikonlarıyla listelenmesi.
+- Kaldırma sonrası artık dosya ve kayıt defteri girdilerinin
+  derin temizliği.
+
+Temizlik ve bellek
+- Geçici klasörler, önbellekler, Windows Update artıkları ve
+  prefetch için boyut önizlemeli temizlik.
+- Anlık RAM boşaltma ve bellek istatistikleri.
+
+Güvenlik
+- Windows Defender için ayrıntılı seçenekler ve önayarlar.
+- Tam kapatma / açma seçeneği (yönetici onayıyla).
+
+Ağ ve güç
+- Cloudflare, Google, Quad9, AdGuard DNS önayarları ve ping
+  ölçüm tablosu.
+- Ultimate Performance dahil Windows güç planı seçenekleri.
+
+Sistem paneli
+- CPU, RAM, disk ve GPU için canlı istatistikler.
+- Donanım özet bilgileri.
+
+Kişiselleştirme
+- Windows arayüzü için ince ayarlar (Explorer, görev çubuğu,
+  sağ tık menüsü vb.).
+
+Otomatik güncelleme
+- Uygulama açılışta GitHub Releases'i kontrol eder.
+- Yeni sürüm varsa tam ekran güncelleme ekranı gösterilir,
+  indirme yüzdesi canlı akar ve kurulum otomatik başlatılır.
+
+--------------------------------------------------------------
+Sistem gereksinimleri
+--------------------------------------------------------------
+- Windows 10 (x64) veya Windows 11
+- Yönetici ayrıcalıkları (sürücü / kayıt defteri / servis
+  işlemleri için)
+- Yaklaşık 250 MB disk alanı
+
+--------------------------------------------------------------
+İndirme
+--------------------------------------------------------------
+- Cobalt-0.1.0-x64.exe        — kurulum (NSIS)
+- Cobalt-0.1.0-portable.exe   — taşınabilir sürüm
+
+SHA256 imzaları ilgili dosyaların açıklamalarında yer alır.
+
+--------------------------------------------------------------
+Bilinen sorunlar
+--------------------------------------------------------------
+- Bazı OEM sürücüleri Windows Update kataloğunda görünmez;
+  üretici sitesi üzerinden kurulmaları gerekir.
+- winget kurulu değilse "Uygulamalar" sekmesi devre dışı kalır.
+  Microsoft Store üzerinden "App Installer" kurulumu yeterlidir.
+
+--------------------------------------------------------------
+Teşekkür
+--------------------------------------------------------------
+Geri bildirim ve hata raporları için:
+https://github.com/ensomg/Cobalt/issues
+
+—
+Cobalt v0.1.0  •  © 2026 Enes  •  MIT Lisansı

@@ -1,0 +1,85 @@
+Cobalt v0.1.0
+=============
+First stable release. A modern PC maintenance, driver management
+and optimization tool for Windows — all under one roof.
+
+--------------------------------------------------------------
+What's new
+--------------------------------------------------------------
+
+Drivers
+- Lists pending driver updates from the Windows Update catalog
+  and installs them silently in the background.
+- Real-time progress tracking during installation.
+
+Optimization
+- Curated presets for registry and service tweaks.
+- Per-item status detection and one-click revert.
+- Startup items and Windows services management.
+- SFC / DISM based system repair tools.
+
+Applications
+- Install, upgrade and uninstall software via winget.
+- Browse installed programs by icon.
+- Deep-clean leftover files and registry entries after uninstall.
+
+Cleanup and memory
+- Reclaims disk space from temp folders, caches, Windows Update
+  leftovers and prefetch, with a size preview before you commit.
+- On-demand RAM trim and memory statistics.
+
+Security
+- Granular toggles and presets for Windows Defender.
+- Full disable / enable path (with admin confirmation).
+
+Network and power
+- One-click DNS presets (Cloudflare, Google, Quad9, AdGuard)
+  with a ping table.
+- Windows power plans including Ultimate Performance.
+
+System dashboard
+- Live CPU, RAM, disk and GPU counters.
+- Hardware summary at a glance.
+
+Customization
+- Tweaks for the Windows shell (Explorer, taskbar, context
+  menu, etc.).
+
+Auto update
+- The app checks GitHub Releases on launch.
+- If a newer version is out, a full-screen update screen is
+  shown with the download percentage live, and the installer
+  is launched automatically.
+
+--------------------------------------------------------------
+System requirements
+--------------------------------------------------------------
+- Windows 10 (x64) or Windows 11
+- Administrator privileges (for driver / registry / service
+  operations)
+- Around 250 MB of disk space
+
+--------------------------------------------------------------
+Downloads
+--------------------------------------------------------------
+- Cobalt-0.1.0-x64.exe        — installer (NSIS)
+- Cobalt-0.1.0-portable.exe   — portable build
+
+SHA256 checksums are listed in each asset description.
+
+--------------------------------------------------------------
+Known issues
+--------------------------------------------------------------
+- Some OEM drivers do not appear in the Windows Update catalog
+  and need to be installed from the vendor site.
+- The "Apps" tab is disabled if winget is not installed.
+  Installing "App Installer" from the Microsoft Store is enough.
+
+--------------------------------------------------------------
+Thanks
+--------------------------------------------------------------
+Feedback and bug reports:
+https://github.com/ensomg/Cobalt/issues
+
+—
+Cobalt v0.1.0  •  © 2026 Enes  •  MIT License

@@ -100,8 +100,11 @@ contextBridge.exposeInMainWorld('cobalt', {
   notify: (payload) => ipcRenderer.send('app:notify', payload),
   notifyTest: () => ipcRenderer.invoke('app:notifyTest'),
 
-  rpcTab:   (route) => ipcRenderer.send('rpc:tab', route),
-  rpcUsage: (payload) => ipcRenderer.send('rpc:usage', payload),
+  rpcTab:       (route) => ipcRenderer.send('rpc:tab', route),
+  rpcUsage:     (payload) => ipcRenderer.send('rpc:usage', payload),
+  rpcGetConfig: () => ipcRenderer.invoke('rpc:getConfig'),
+  rpcSetConfig: (cfg) => ipcRenderer.invoke('rpc:setConfig', cfg),
+  rpcStatus:    () => ipcRenderer.invoke('rpc:status'),
 
   updaterCheck:   () => ipcRenderer.invoke('updater:check'),
   updaterInstall: (info, onProgress) => {
