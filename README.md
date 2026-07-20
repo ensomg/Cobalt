@@ -56,8 +56,7 @@ Output lands in `dist/`.
 Cobalt uses GitHub Releases as its update channel. On startup it reads
 `api.github.com/repos/ensomg/Cobalt/releases/latest`, compares the tag with the
 running version, and — if a newer build is available — shows a full-screen
-update prompt with the download progress inline. To publish an update, tag a new
-release (e.g. `v0.2.0`) and attach the `Cobalt-Setup-*.exe` asset.
+update prompt with the download progress inline.
 
 ## Project layout
 
