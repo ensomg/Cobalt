@@ -77,15 +77,11 @@ the in-app toast.
 ## License
 
 Released under the [MIT License](LICENSE). © 2026 Enes.
+
 ## Star History
 
-<a href="https://www.star-history.com/?repos=ensomg%2FCobalt&type=date&legend=top-left">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=ensomg/Cobalt&type=date&theme=dark&legend=top-left&sealed_token=gwCBM4P5ASC5-t8bLESu8sFE1En8-FSGlDPGlITCXULszapXhbcMRBhnbBGOEuIASA" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=ensomg/Cobalt&type=date&legend=top-left&sealed_token=gwCBM4P5ASC5-t8bLESu8sFE1En8-FSGlDPGlITCXULszapXhbcMRBhnbBGOEuIASA" />
-   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=ensomg/Cobalt&type=date&legend=top-left&sealed_token=gwCBM4P5ASC5-t8bLESu8sFE1En8-FSGlDPGlITCXULszapXhbcMRBhnbBGOEuIASA" />
- </picture>
-</a>
+[![Star History Chart](https://api.star-history.com/chart?repos=ensomg/Cobalt&type=date&legend=top-left&sealed_token=gwCBM4P5ASC5-t8bLESu8sFE1En8-FSGlDPGlITCXULszapXhbcMRBhnbBGOEuIASA)](https://www.star-history.com/?repos=ensomg%2FCobalt&type=date&legend=top-left)
+
 ---
 
 <p align="center">
